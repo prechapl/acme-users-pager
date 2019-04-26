@@ -1,10 +1,10 @@
-import React, { Component, Fragment } from 'react';
-import { Button, ButtonGroup } from 'react-bootstrap';
+import React, { Component, Fragment } from "react";
+import { Badge, Button, ButtonGroup } from "react-bootstrap";
 
 class Pager extends Component {
   constructor(props) {
     super(props);
-    console.log('props in Pager constructor', props);
+    console.log("props in Pager constructor", props);
   }
 
   render() {
@@ -12,15 +12,18 @@ class Pager extends Component {
     const lastPage = Math.ceil(count / 50);
     // console.log('lastPage in Pager render', typeof lastPage);
     // console.log('in Pager render', this.props.match);
-    console.log('index in pager', typeof index);
+    // console.log("index in pager", typeof index);
     return (
       <Fragment>
         <ButtonGroup aria-label="pager buttons" size="sm">
-          <Button variant="secondary" size="sm" href="/users/0">
+          <Button variant="secondary" size="sm" href="/#/users">
             First
           </Button>
           <Button variant="secondary" size="sm" href={`/#/users/${index - 1}`}>
             Prev
+          </Button>
+          <Button variant="secondary">
+            <Badge variant="secondary">{index}</Badge>
           </Button>
           <Button variant="secondary" size="sm" href={`/#/users/${index + 1}`}>
             Next

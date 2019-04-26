@@ -1,19 +1,21 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import { Container, Table, Row } from 'react-bootstrap';
-import Pager from './Pager';
-import Search from './Search';
+import React, { Component } from "react";
+import axios from "axios";
+import { Container, Table, Row, Col } from "react-bootstrap";
+import Pager from "./Pager";
+import Search from "./Search";
 
 class Users extends Component {
   constructor() {
     super();
     this.state = {
       users: [],
-      count: 0
+      count: 0,
+      search: ""
     };
   }
 
   componentDidMount() {
+    console.log("in users", this.props.match.params);
     this.fetchUsers();
   }
 
@@ -22,6 +24,15 @@ class Users extends Component {
       this.fetchUsers();
     }
   }
+
+  handleChange = ({ target }) => {
+    const searchTerm = target.value;
+    this.setState({ search: searchTerm });
+  };
+
+  handleClear = () => {
+    this.setState({ search: "" });
+  };
 
   // setLocalState = () => {};
 
@@ -37,15 +48,22 @@ class Users extends Component {
   };
 
   render() {
-    const users = this.state.users;
-    const count = this.state.count;
-    const index = 1 * this.props.match.params.index || 0;
+    const { users, count, search } = this.state;
+    const index = 1 * this.props.match.params.index || 1;
     return (
       <Container>
-        <Row>
-          {count} total users
-          <Pager index={index} count={count} />
-          <Search />
+        <Row className="mt-3">
+          <Col>{count} total users</Col>
+          <Col>
+            <Pager index={index} count={count} />
+          </Col>
+          <Col>
+            <Search
+              searchTerm={search}
+              change={this.handleChange}
+              clear={this.handleClear}
+            />
+          </Col>
         </Row>
         <Table striped bordered hover size="sm">
           <thead>
