@@ -1,10 +1,10 @@
-import React, { Component, Fragment } from "react";
-import { Badge, Button, ButtonGroup } from "react-bootstrap";
+import React, { Component, Fragment } from 'react';
+import { Badge, Button, ButtonGroup } from 'react-bootstrap';
 
 class Pager extends Component {
   constructor(props) {
     super(props);
-    console.log("props in Pager constructor", props);
+    // console.log("props in Pager constructor", props);
   }
 
   render() {

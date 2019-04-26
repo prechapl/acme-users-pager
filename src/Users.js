@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import axios from "axios";
-import { Container, Table, Row, Col } from "react-bootstrap";
-import Pager from "./Pager";
-import Search from "./Search";
+import React, { Component } from 'react';
+import axios from 'axios';
+import { Container, Table, Row, Col } from 'react-bootstrap';
+import Pager from './Pager';
+import Search from './Search';
 
 class Users extends Component {
   constructor() {
@@ -10,36 +10,49 @@ class Users extends Component {
     this.state = {
       users: [],
       count: 0,
-      search: ""
+      searchTerm: ''
     };
   }
 
   componentDidMount() {
-    console.log("in users", this.props.match.params);
-    this.fetchUsers();
+    this.props.match.params.searchTerm ? this.search() : this.fetchUsers();
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.match.params.index !== prevProps.match.params.index) {
+    // console.log('prevProps in Users CDU', prevProps);
+    // console.log('props in Users CDU', this.props);
+    const index = this.props.match.params.index;
+    const searchTerm = this.props.match.params.searchTerm;
+    const prevIndex = prevProps.match.params.index;
+    // const prevTerm = prevProps.match.params.searchTerm;
+    console.log('searchTerm', searchTerm);
+    console.log('index', index);
+    console.log('prevIndex', prevIndex);
+    if (
+      !searchTerm &&
+      this.props.location.pathname !== prevProps.location.pathname
+    ) {
       this.fetchUsers();
+    }
+
+    if (searchTerm && index !== prevIndex) {
+      this.search();
     }
   }
 
   handleChange = ({ target }) => {
-    const searchTerm = target.value;
-    this.setState({ search: searchTerm });
+    const term = target.value;
+    this.setState({ searchTerm: term });
   };
 
   handleClear = () => {
-    this.setState({ search: "" });
+    this.setState({ searchTerm: '' });
+    this.fetchUsers();
   };
 
-  // setLocalState = () => {};
-
   fetchUsers = () => {
+    console.log('fetch fired!');
     const index = this.props.match.params.index || 0;
-    // console.log('index in fetchUsers', index);
-    // console.log('props in fetchUsers', this.props);
     return axios
       .get(`https://acme-users-api.herokuapp.com/api/users/${index}`)
       .then(response => response.data)
@@ -47,8 +60,23 @@ class Users extends Component {
       .catch(e => console.log(e));
   };
 
+  search = () => {
+    console.log('search fired!');
+    const searchTerm = this.state.searchTerm;
+    const index = this.props.match.params.index || 0;
+    return axios
+      .get(
+        `https://acme-users-api.herokuapp.com/api/users/search/${searchTerm}/${index}`
+      )
+      .then(response => response.data)
+      .then(({ count, users }) => this.setState({ count, users }))
+      .catch(e => console.log(e));
+  };
+
   render() {
-    const { users, count, search } = this.state;
+    // console.log('in Users render', this.props);
+    const searchTerm = this.state.searchTerm;
+    const { users, count } = this.state;
     const index = 1 * this.props.match.params.index || 1;
     return (
       <Container>
@@ -59,9 +87,11 @@ class Users extends Component {
           </Col>
           <Col>
             <Search
-              searchTerm={search}
+              search={this.search}
               change={this.handleChange}
               clear={this.handleClear}
+              searchTerm={searchTerm}
+              history={this.props.history}
             />
           </Col>
         </Row>

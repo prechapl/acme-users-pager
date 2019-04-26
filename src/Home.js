@@ -10,6 +10,8 @@ class Home extends Component {
             <h1>ACME USERS</h1>
             <hr />
             <p> by Preston </p>
+            <hr />
+            <img src="http://i65.tinypic.com/hvrxgp.jpg" alt="...Loading" />
           </Container>
         </Jumbotron>
       </Fragment>
