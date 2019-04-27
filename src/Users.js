@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Container, Table, Row, Col } from 'react-bootstrap';
 import Pager from './Pager';
 import Search from './Search';
+import Hilite from './Hilite';
 
 class Users extends Component {
   constructor() {
@@ -25,9 +26,9 @@ class Users extends Component {
     const searchTerm = this.props.match.params.searchTerm;
     const prevIndex = prevProps.match.params.index;
     // const prevTerm = prevProps.match.params.searchTerm;
-    console.log('searchTerm', searchTerm);
-    console.log('index', index);
-    console.log('prevIndex', prevIndex);
+    // console.log('searchTerm', searchTerm);
+    // console.log('index', index);
+    // console.log('prevIndex', prevIndex);
     if (
       !searchTerm &&
       this.props.location.pathname !== prevProps.location.pathname
@@ -51,7 +52,7 @@ class Users extends Component {
   };
 
   fetchUsers = () => {
-    console.log('fetch fired!');
+    // console.log('fetch fired!');
     const index = this.props.match.params.index || 0;
     return axios
       .get(`https://acme-users-api.herokuapp.com/api/users/${index}`)
@@ -61,7 +62,7 @@ class Users extends Component {
   };
 
   search = () => {
-    console.log('search fired!');
+    // console.log('search fired!');
     const searchTerm = this.state.searchTerm;
     const index = this.props.match.params.index || 0;
     return axios
@@ -74,10 +75,9 @@ class Users extends Component {
   };
 
   render() {
-    // console.log('in Users render', this.props);
-    const searchTerm = this.state.searchTerm;
-    const { users, count } = this.state;
+    const { users, count, searchTerm } = this.state;
     const index = 1 * this.props.match.params.index || 1;
+    const currentSearch = this.props.match.params.searchTerm;
     return (
       <Container>
         <Row className="mt-3">
@@ -109,11 +109,24 @@ class Users extends Component {
             {users.map(user => {
               return (
                 <tr key={user.id}>
-                  <td>{user.firstName} </td>
-                  <td>{user.middleName} </td>
-                  <td>{user.lastName} </td>
-                  <td>{user.title} </td>
-                  <td>{user.email} </td>
+                  <td>
+                    <Hilite searchTerm={currentSearch} input={user.firstName} />
+                  </td>
+                  <td>
+                    <Hilite
+                      searchTerm={currentSearch}
+                      input={user.middleName}
+                    />
+                  </td>
+                  <td>
+                    <Hilite searchTerm={currentSearch} input={user.lastName} />
+                  </td>
+                  <td>
+                    <Hilite input={user.title} />
+                  </td>
+                  <td>
+                    <Hilite input={user.email} />
+                  </td>
                 </tr>
               );
             })}
