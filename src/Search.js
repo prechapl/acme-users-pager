@@ -2,12 +2,8 @@ import React, { Component, Fragment } from 'react';
 import { Form, FormControl, Button } from 'react-bootstrap';
 
 class Search extends Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
-    // console.log('in search', this.props);
-    const { clear, change, search, searchTerm } = this.props;
+    const { clear, change, searchTerm } = this.props;
     return (
       <Fragment>
         <Form inline>
@@ -24,7 +20,9 @@ class Search extends Component {
             size="sm"
             type="button"
             onClick={() => {
-              this.props.history.push(`/users/search/${searchTerm}`);
+              this.props.history.push(
+                `/users/search/${searchTerm.toUpperCase()}`
+              );
             }}
           >
             Search

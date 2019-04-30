@@ -20,15 +20,10 @@ class Users extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // console.log('prevProps in Users CDU', prevProps);
-    // console.log('props in Users CDU', this.props);
     const index = this.props.match.params.index;
-    const searchTerm = this.props.match.params.searchTerm;
+    const searchTerm = this.state.searchTerm;
     const prevIndex = prevProps.match.params.index;
-    // const prevTerm = prevProps.match.params.searchTerm;
-    // console.log('searchTerm', searchTerm);
-    // console.log('index', index);
-    // console.log('prevIndex', prevIndex);
+
     if (
       !searchTerm &&
       this.props.location.pathname !== prevProps.location.pathname
@@ -52,22 +47,20 @@ class Users extends Component {
   };
 
   fetchUsers = () => {
-    // console.log('fetch fired!');
     const index = this.props.match.params.index || 0;
     return axios
-      .get(`https://acme-users-api.herokuapp.com/api/users/${index}`)
+      .get(`https://acme-users-api-rev.herokuapp.com/api/users/${index}`)
       .then(response => response.data)
       .then(({ count, users }) => this.setState({ count, users }))
       .catch(e => console.log(e));
   };
 
   search = () => {
-    // console.log('search fired!');
     const searchTerm = this.state.searchTerm;
     const index = this.props.match.params.index || 0;
     return axios
       .get(
-        `https://acme-users-api.herokuapp.com/api/users/search/${searchTerm}/${index}`
+        `https://acme-users-api-rev.herokuapp.com/api/users/search/${searchTerm}/${index}`
       )
       .then(response => response.data)
       .then(({ count, users }) => this.setState({ count, users }))
@@ -110,22 +103,34 @@ class Users extends Component {
               return (
                 <tr key={user.id}>
                   <td>
-                    <Hilite searchTerm={currentSearch} input={user.firstName} />
+                    <Hilite
+                      searchTerm={currentSearch}
+                      input={user.firstName.toUpperCase()}
+                    />
                   </td>
                   <td>
                     <Hilite
                       searchTerm={currentSearch}
-                      input={user.middleName}
+                      input={user.middleName.toUpperCase()}
                     />
                   </td>
                   <td>
-                    <Hilite searchTerm={currentSearch} input={user.lastName} />
+                    <Hilite
+                      searchTerm={currentSearch}
+                      input={user.lastName.toUpperCase()}
+                    />
                   </td>
                   <td>
-                    <Hilite input={user.title} />
+                    <Hilite
+                      // searchTerm={currentSearch}
+                      input={user.title.toUpperCase()}
+                    />
                   </td>
                   <td>
-                    <Hilite input={user.email} />
+                    <Hilite
+                      searchTerm={currentSearch}
+                      input={user.email.toUpperCase()}
+                    />
                   </td>
                 </tr>
               );
